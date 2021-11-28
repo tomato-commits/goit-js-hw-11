@@ -58,6 +58,11 @@ body {
   justify-content: end;
 }
 
+.photo-card a {
+  text-decoration: none;
+  color: black;
+}
+
 .info {
   display: flex;
   justify-content: space-around;
