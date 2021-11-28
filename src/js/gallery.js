@@ -6,7 +6,6 @@ const gallery = document.querySelector(".gallery");
 const loadMoreBtn = document.querySelector(".load-more");
 
 searchForm[1].addEventListener("click", search);
-loadMoreBtn.style.display = "none";
 loadMoreBtn.addEventListener("click", loadMore);
 
 async function search(event) {
@@ -30,7 +29,7 @@ async function search(event) {
 }
 
 function loadMore() {
-    
+
 }
 
 function renderGallery(images) {
