@@ -34,7 +34,18 @@ async function loadMore() {
     loadMoreBtn.style.display = "none";
 
     searchPage += 1;
-    await loadImages(searchValue, searchPage);
+    const images = await loadImages(searchValue, searchPage);
+
+    if (images.totalHits) {
+        const { height: cardHeight } = document
+            .querySelector('.gallery')
+            .firstElementChild.getBoundingClientRect();
+
+        window.scrollBy({
+            top: cardHeight * 2,
+            behavior: 'smooth',
+        });
+    }
 }
 
 async function loadImages(value, page = 1) {
