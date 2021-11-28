@@ -11,7 +11,7 @@ async function fetchImages({ value, page }) {
             page: page || 1,
             per_page: 40,
         });
-        const response = await fetch(`https://pixabay.com/api?${params}`);
+        const response = await fetch(`https://pixabay.com/api/?${params}`);
         const images = await response.json();
 
         console.log(images);
