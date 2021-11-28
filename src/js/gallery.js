@@ -8,17 +8,24 @@ const loadMoreBtn = document.querySelector(".load-more");
 searchForm[1].addEventListener("click", search);
 loadMoreBtn.addEventListener("click", loadMore);
 
+let searchValue;
+let page = 1;
+
 async function search(event) {
-    const value = searchForm[0].value;
+    searchValue = searchForm[0].value;
 
     event.preventDefault();
     clearMarkup();
 
-    if (!value) {
+    if (!searchValue) {
         return;
     }
 
-    const images = await fetchImages({ value });
+    await loadImages(searchValue);
+}
+
+async function loadImages(value, page = 1) {
+    const images = await fetchImages({ value, page });
 
     if (!images.total) {
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
@@ -28,8 +35,13 @@ async function search(event) {
     }
 }
 
-function loadMore() {
+async function loadMore() {
+    loadMoreBtn.style.display = "none";
 
+    page += 1;
+    await loadImages(searchValue, page);
+
+    loadMoreBtn.style.display = "block";
 }
 
 function renderGallery(images) {
@@ -55,7 +67,7 @@ function renderGallery(images) {
             })
         .join("");
     
-    gallery.innerHTML = markup;
+    gallery.innerHTML += markup;
 }
 
 function clearMarkup() {
