@@ -8,11 +8,13 @@ const loadMoreBtn = document.querySelector(".load-more");
 searchForm[1].addEventListener("click", search);
 loadMoreBtn.addEventListener("click", loadMore);
 
+const perPage = 40;
+let searchPage = 1;
 let searchValue;
-let page = 1;
 
 async function search(event) {
     searchValue = searchForm[0].value;
+    searchPage = 1;
 
     event.preventDefault();
     clearMarkup();
@@ -24,24 +26,29 @@ async function search(event) {
     await loadImages(searchValue);
 }
 
+async function loadMore() {
+    loadMoreBtn.style.display = "none";
+
+    searchPage += 1;
+    await loadImages(searchValue, searchPage);
+}
+
 async function loadImages(value, page = 1) {
     const images = await fetchImages({ value, page });
 
     if (!images.total) {
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
     } else {
-        loadMoreBtn.style.display = "block";
+        const totalImages = page * perPage;
+
+        if (totalImages <= images.totalHits) {
+            loadMoreBtn.style.display = "block";
+        } else {
+            Notify.info("We're sorry, but you've reached the end of search results.");
+        }
+
         renderGallery(images.hits);
     }
-}
-
-async function loadMore() {
-    loadMoreBtn.style.display = "none";
-
-    page += 1;
-    await loadImages(searchValue, page);
-
-    loadMoreBtn.style.display = "block";
 }
 
 function renderGallery(images) {
