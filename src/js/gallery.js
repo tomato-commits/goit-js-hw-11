@@ -23,7 +23,11 @@ async function search(event) {
         return;
     }
 
-    await loadImages(searchValue);
+    const images = await loadImages(searchValue);
+
+    if (images.totalHits) {
+        Notify.success(`Hooray! We found ${images.totalHits} images.`);
+    }
 }
 
 async function loadMore() {
@@ -36,7 +40,7 @@ async function loadMore() {
 async function loadImages(value, page = 1) {
     const images = await fetchImages({ value, page });
 
-    if (!images.total) {
+    if (!images.totalHits) {
         Notify.failure("Sorry, there are no images matching your search query. Please try again.");
     } else {
         const totalImages = page * perPage;
@@ -49,6 +53,8 @@ async function loadImages(value, page = 1) {
 
         renderGallery(images.hits);
     }
+
+    return images;
 }
 
 function renderGallery(images) {
